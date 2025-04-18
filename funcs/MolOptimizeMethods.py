@@ -11,8 +11,8 @@ import pandas as pd
 from rdkit import Chem
 from rdkit.Chem import QED, Draw
 
-from reusedCode.utils import delete_attachment, Conn, Mol_Conn, delete_attachment_H
-from reusedCode.highlightMolReplace import highlightMolsReplace
+from InterFragHub.funcs.reusedCode.utils import delete_attachment, Conn, Mol_Conn, delete_attachment_H
+from InterFragHub.funcs.reusedCode.highlightMolReplace import highlightMolsReplace
 def fragmention(mol,hit):
     '''
     input -> 完整分子mol , 需替换子结构对应的索引列表hit

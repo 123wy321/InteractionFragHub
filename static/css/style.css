@@ -1,0 +1,56 @@
+#output_image{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#btn1,#btn2,#btn3,#btn4,#btn5,#btn6,#btn7,#btn8,#btn9,#btn10{
+    background: #bddce2;
+    font-size: 25px;
+    font-weight:bold;
+    /*font-family: "Times New Roman";*/
+}
+
+#body1,#body2,#body3,#body4,#body5{
+    background: linear-gradient(#C4E0E5,#4CA1AF);
+}
+
+#body1-button,#body2-button,#body3-button,#body4-button,#body5-button{
+    font-size:23px;
+    /*font-family: "Times New Roman";*/
+    font-weight: bold;
+}
+
+#component-83-button, #component-102-button,#component-113-button{
+    font-size: 22px;
+}
+
+#component-3,#component-14,#component-29,#component-63,#component-78,#component-82{
+    font-size:24px;
+    /*font-family: "Times New Roman";*/
+}
+
+span.svelte-1gfkn6j {
+    font-size:22px;
+    /*font-family: "Times New Roman";*/
+}
+
+label.svelte-1b6s6s.float,label.svelte-1b6s6s,td.svelte-1lop6bc{
+    font-size: 22px;
+}
+
+input.border-none.svelte-tq78c3,p.svelte-1bvc1p0{
+    font-size: 22px;
+}
+#component-30-button,#component-41-button,#component-51-button,#component-79-button,#component-83-button,#component-98-button,#component-102-button{
+    font-size: 22px;
+}
+div#component-79 {
+    font-size: 22px;
+    /*text-align: center;*/
+}
+textarea.scroll-hide.svelte-1f354aw {
+    font-size: 20px;
+}
+
+

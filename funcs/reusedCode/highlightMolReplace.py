@@ -9,7 +9,7 @@ from rdkit import Chem
 from PIL.Image import Image
 from rdkit.Chem import Draw
 from rdkit.Chem.Draw import rdMolDraw2D
-from utils import delete_attachment_H
+from InterFragHub.funcs.reusedCode.utils import delete_attachment_H
 def highlightOneMolReplace(raw_smi,replace_part_smi):
     mol=Chem.MolFromSmiles(raw_smi)
     patt=Chem.MolFromSmiles(replace_part_smi)

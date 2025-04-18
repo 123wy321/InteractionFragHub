@@ -191,7 +191,7 @@ class Ligand(Mol):
 #         if mol_water is not None:
 #             self.mol_water = mol_water
 #             self.mol_water_conf = mol_water.GetConformers()[0]
-#             data = namedtuple('water', 'oxy oxy_orig_idx oxy_coords')
+#             static = namedtuple('water', 'oxy oxy_orig_idx oxy_coords')
 #             for hoh in self.mol_water.GetAtoms():
 #                 oxy = None
 #                 if hoh.GetAtomicNum() == 8:
@@ -202,7 +202,7 @@ class Ligand(Mol):
 #                         oxy_orig_idx = oxy.GetIdx()
 #                         oxy_coords = get_atom_coords(oxy)
 #                         self.water.append(
-#                             data(
+#                             static(
 #                                 oxy=oxy,
 #                                 oxy_orig_idx=oxy_orig_idx,
 #                                 oxy_coords=oxy_coords))

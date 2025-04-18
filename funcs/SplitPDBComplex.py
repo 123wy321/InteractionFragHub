@@ -10,11 +10,11 @@ from Bio.PDB import PDBParser
 from biopandas.pdb import PandasPdb
 from rdkit import Chem
 from rdkit.Chem import AllChem
+import subprocess
 
-tmpdir=os.getcwd()
 def splitPDB(pdb,ligandName):
     #先测试一个配体
-    pdbName=pdb.name.split('/')[-1][:-4]
+    pdbName=pdb.name.split('\\')[-1][:-4]
     if ',' not in ligandName:
         ligandNameList=[ligandName]
     else:
@@ -49,7 +49,7 @@ def splitPDB(pdb,ligandName):
     ppdb1.df['HETATM'] = pd.DataFrame()
     ppdb1.df['ANISOU'] = pd.DataFrame()
     ppdb1.df['OTHERS'] = ppdb1.df['OTHERS'][(ppdb1.df['OTHERS']['record_name'] == 'CONECT') | (ppdb1.df['OTHERS']['record_name'] == 'END')]
-    pro_pdb_path=os.path.join(tmpdir,f'{pdbName}_pro.pdb')
+    pro_pdb_path=os.path.join(os.getcwd(),f'/{pdbName}_pro.pdb')
     ppdb1.to_pdb(pro_pdb_path)
     print(f'[protein]success generate {pdbName}_pro.pdb')
     lig_mols,poc_pdbs=[],[]
@@ -63,16 +63,19 @@ def splitPDB(pdb,ligandName):
         ppdb.df['ATOM'] = pd.DataFrame()
         ppdb.df['ANISOU'] = pd.DataFrame()
         ppdb.df['OTHERS'] = ppdb.df['OTHERS'][(ppdb.df['OTHERS']['record_name'] == 'CONECT') | (ppdb.df['OTHERS']['record_name'] == 'END')]
-        lig_pdb_path=os.path.join(tmpdir,f'{pdbName}_{ligName}_{chainId[0]}_lig.pdb')
+        lig_pdb_path=os.path.join(os.getcwd(),f'{pdbName}_{ligName}_{chainId[0]}_lig.pdb')
         ppdb.to_pdb(lig_pdb_path)
         lig_mols.append(lig_pdb_path)
         mol=AllChem.MolFromPDBFile(lig_pdb_path)
         if mol!=None:
-            lig_mol_path=os.path.join(tmpdir,f'{pdbName}_{ligName}_{chainId[0]}_lig.mol')
+            lig_mol_path=os.path.join(os.getcwd(),f'{pdbName}_{ligName}_{chainId[0]}_lig.mol')
             Chem.MolToMolFile(mol,lig_mol_path)
             lig_mols.append(lig_mol_path)
             print(f'[ligand]success generate {pdbName}_{ligName}_{chainId[0]}_lig.mol&pdb')
         else:
             print(f'{pdbName}_{ligName}_{chainId[0]}_lig.pdb can not convert into mol file')
+
     return pro_pdb_path,lig_mols
 
+def prepareFile(lig):
+    command=''

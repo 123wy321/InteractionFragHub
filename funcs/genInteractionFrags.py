@@ -9,11 +9,11 @@ import numpy as np
 import pandas as pd
 from rdkit import Chem
 from rdkit.Chem import AllChem
-from reuseCode.utils import mol_with_atomLabel
-from reuseCode.calECscore import getECPairs
-from reusedCode.RotaryFragMethod import RotaryFrag
-from interaction_components.plinteraction import get_interactions
-from reusedCode.utils import *
+from InterFragHub.funcs.reusedCode.utils import mol_with_atomLabel
+from InterFragHub.funcs.reusedCode.calECscore import getECPairs
+from InterFragHub.funcs.reusedCode.RotaryFragMethod import RotaryFrag
+from InterFragHub.funcs.interaction_components.plinteraction import get_interactions
+from InterFragHub.funcs.reusedCode.utils import *
 
 dummy = Chem.MolFromSmiles('*')
 Hydrogen = Chem.MolFromSmarts('[H]')

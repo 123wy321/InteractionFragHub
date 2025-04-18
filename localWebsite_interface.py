@@ -4,20 +4,21 @@
 @Author  : WY
 @File    : localWebsite_interface.py
 '''
+import os
 import gradio as gr
-
 from funcs.BreakMolecules import breakMols
 from funcs.SplitPDBComplex import splitPDB
 from funcs.genInteractionFrags import genECFrags,genHbondFrags,genHydrophobicFrags
 from funcs.reusedCode.highlightMolReplace import highlightOneMolReplace
 from funcs.searchFrags import findFrags
 from funcs.MolOptimizeMethods import replaceFrag,connectFrag
+
 res_types=['GLY','ALA','SER','THR','CYS','VAL','LEU','ILE','MET','PRO','PHE','TYR','TRP','ASP','GLU','ASN','GLN','HIS','LYS','ARG']
 interaction_types=['ECFrags','HydrophobicFrags','HbondFrags']
 
 if __name__ == '__main__':
-    with gr.Blocks(css='css/style.css') as demo:
-        gr.Image(value='./picture/logo.png',width=300,show_download_button=False,container=False)
+    with gr.Blocks(css='./static/css/style.css') as demo:
+        gr.Image(value='./static/picture/logo.png',width=300,show_download_button=False,container=False)
         #分子打碎
         with gr.Tab(label="Break Molecule", elem_id="body1"):
             gr.Markdown('Use RotaryFrag to break Molecules.')
@@ -134,14 +135,14 @@ if __name__ == '__main__':
                 with gr.Row():
                     example4 = gr.Image(label='Display linked molecules')
                 connect.click(fn=connectFrag, inputs=[input_path, input_file], outputs=[output_file1, example4])
-            with gr.Tab(label="LinkInvent", elem_classes="body5_mini_3"):
-                with gr.Row():
-                    with gr.Column(scale=1):
-                        warheads_file = gr.Textbox(label='Warheads File')
-                        linkinvent = gr.Button(value='Linker Design',elem_id="btn10")
-                    with gr.Column(scale=1):
-                        output_file2 = gr.components.File(label='Generate molecules sdf file')
-                with gr.Row():
-                    example5=gr.Image(label='Display generated molecules')
-                linkinvent.click(fn=genMols_linkinvent,inputs=[warheads_file],outputs=[output_file2, example5])
+            # with gr.Tab(label="LinkInvent", elem_classes="body5_mini_3"):
+            #     with gr.Row():
+            #         with gr.Column(scale=1):
+            #             warheads_file = gr.Textbox(label='Warheads File')
+            #             linkinvent = gr.Button(value='Linker Design',elem_id="btn10")
+            #         with gr.Column(scale=1):
+            #             output_file2 = gr.components.File(label='Generate molecules sdf file')
+            #     with gr.Row():
+            #         example5=gr.Image(label='Display generated molecules')
+            #     linkinvent.click(fn=genMols_linkinvent,inputs=[warheads_file],outputs=[output_file2, example5])
         demo.launch(share=True)
