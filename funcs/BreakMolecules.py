@@ -8,8 +8,8 @@ import os
 import shutil
 import numpy as np
 import pandas as pd
-from rdkit import Chem
 from rdkit.Chem import Draw
+from InterFragHub.funcs.reusedCode.RotaryFragMethod import *
 
 tmpdir=os.getcwd()
 def breakMols(file_obj):

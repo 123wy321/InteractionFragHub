@@ -5,10 +5,20 @@
 @File    : localWebsite_interface.py
 '''
 import gradio as gr
-from funcs.BreakMolecules import *
+
+from funcs.BreakMolecules import breakMols
+from funcs.SplitPDBComplex import splitPDB
+from funcs.genInteractionFrags import genECFrags,genHbondFrags,genHydrophobicFrags
+from funcs.reusedCode.highlightMolReplace import highlightOneMolReplace
+from funcs.searchFrags import findFrags
+from funcs.MolOptimizeMethods import replaceFrag,connectFrag
+res_types=['GLY','ALA','SER','THR','CYS','VAL','LEU','ILE','MET','PRO','PHE','TYR','TRP','ASP','GLU','ASN','GLN','HIS','LYS','ARG']
+interaction_types=['ECFrags','HydrophobicFrags','HbondFrags']
+
 if __name__ == '__main__':
     with gr.Blocks(css='css/style.css') as demo:
         gr.Image(value='./picture/logo.png',width=300,show_download_button=False,container=False)
+        #分子打碎
         with gr.Tab(label="Break Molecule", elem_id="body1"):
             gr.Markdown('Use RotaryFrag to break Molecules.')
             with gr.Row():
@@ -21,6 +31,7 @@ if __name__ == '__main__':
             with gr.Row():
                 example1 = gr.Image(label='Display Fragments')
             breakdown.click(fn=breakMols, inputs=inputs, outputs=[outputs, example1])
+        #分离蛋白复合物
         with gr.Tab(label="Split PDB Complex", elem_id="body2"):
             gr.Markdown('Please enter PDB File, then click Split button to generate PDB file of protein and MOL file of ligand.')
             with gr.Row():
@@ -36,6 +47,7 @@ if __name__ == '__main__':
                 with gr.Column(scale=1):
                     lig_outputs = gr.components.File(label='Ligand file(.mol&.pdb)')
             breakdown.click(fn=splitPDB, inputs=[inputs, ligand_name], outputs=[pro_outputs, lig_outputs])
+        #生成相互作用片段集
         with gr.Tab(label="Generate Interaction Fragments", elem_id="body3"):
             gr.Markdown('Click to generate different interaction frags.')
             with gr.Tab(label="Generate EC Fragments", elem_classes="body3_mini_1"):
@@ -69,6 +81,7 @@ if __name__ == '__main__':
                     with gr.Column(scale=1):
                         frags3=gr.Files()
                     genFrags3.click(fn=genHydrophobicFrags, inputs=[workpath3,lig3,pro3], outputs=frags3)
+        #查找片段
         with gr.Tab(label="Search Fragments", elem_id="body4"):
             gr.Markdown('Please select residue and interaction types,then click Search button to get the needed fragment file.')
             with gr.Row():
@@ -87,6 +100,7 @@ if __name__ == '__main__':
                     gr.Markdown('Fragments Information')
                     mol_df = gr.DataFrame()
             search.click(fn=findFrags, inputs=[res, interaction], outputs=[outputs, example2,mol_df])
+        #基于片段的分子优化
         with gr.Tab(label="Generate molecules based on Fragments", elem_id="body5"):
             gr.Markdown('Select different methods to generate molecules.')
             with gr.Tab(label="Replace Fragments", elem_classes="body5_mini_1"):
@@ -107,7 +121,7 @@ if __name__ == '__main__':
                     replace = gr.Button(value='Replace Fragments',elem_id="btn8")
                 with gr.Row():
                     example3 = gr.Image(label='Display replaced molecules')
-                highlight.click(fn=highlightReplace, inputs=[raw_smi, replace_part_smi], outputs=highlightMol)
+                highlight.click(fn=highlightOneMolReplace, inputs=[raw_smi, replace_part_smi], outputs=highlightMol)
                 replace.click(fn=replaceFrag, inputs=[raw_smi, replace_part_smi, input_file],outputs=[replace_outputs, example3])
             with gr.Tab(label="Link Fragments", elem_classes="body5_mini_2"):
                 with gr.Row():
