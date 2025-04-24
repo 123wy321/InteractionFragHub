@@ -6,13 +6,14 @@
 '''
 import os
 from random import sample
-
+import subprocess
+import uuid
 import pandas as pd
 from rdkit import Chem
-from rdkit.Chem import QED, Draw
-
-from InterFragHub.funcs.reusedCode.utils import delete_attachment, Conn, Mol_Conn, delete_attachment_H
-from InterFragHub.funcs.reusedCode.highlightMolReplace import highlightMolsReplace
+from rdkit.Chem import QED, Draw,PandasTools
+from rdkit.Chem.Draw import rdMolDraw2D
+from funcs.reusedCode.highlightMolReplace import highlightNewMolsReplace
+from funcs.reusedCode.utils import delete_attachment, Conn, Mol_Conn, delete_attachment_H, selectNotNoneMol
 def fragmention(mol,hit):
     '''
     input -> 完整分子mol , 需替换子结构对应的索引列表hit
@@ -60,31 +61,26 @@ def replaceFrag(raw_smi,replace_part_smi,input_file):
                 choices.append(smi)
     connected=Conn(frags_for_connection, choices, '*')
     res=list(set([delete_attachment(s) for s in connected]))
-    outputPath=os.path.join(tmpdir,'replaceFrag_Molecules.sdf')
-    writer=Chem.SDWriter(outputPath)
-    genMols=[]
+    unique_name=str(uuid.uuid4())
+    sdfPath=os.getcwd()+f'/output/molOptimize/{unique_name}.sdf'
+    writer=Chem.SDWriter(sdfPath)
     for i,r in enumerate(res):
         genMol=Chem.MolFromSmiles(r)
         if genMol is not None:
             genMol.SetProp('_Name',str(i))
-            ringNum=genMol.GetRingInfo().NumRings()
             writer.write(genMol)
-            if ringNum>=3:
-                genMols.append(genMol)
-    image=highlightMolsReplace(genMols,frags_for_connection)
     writer.close()
+    df=PandasTools.LoadSDF(sdfPath)
+    image=highlightNewMolsReplace(df.sample(10)['ROMol'],frags_for_connection)
     #高亮前10个代表分子的替换结构
-    return outputPath,image
+    return sdfPath,image
 
-def connectFrag(filepath,files):
+def connectFrag(files):
+    filespath=[f.name for f in files]
     conns={}
-    for i,f in enumerate(files.split(',')):
-        if f.endswith('.sdf'):
-            suppls=Chem.SDMolSupplier(filepath+'/'+f)
-            conns[i]=[Chem.MolToSmiles(s) for s in suppls]
-        elif f.endswith('csv'):
-            smiles=list(set(pd.read_csv(filepath+'/'+f)['Smiles'].tolist()))
-            conns[i]=sample(smiles,30)
+    for i,f in enumerate(filespath):
+        suppls=Chem.SDMolSupplier(f)
+        conns[i]=[Chem.MolToSmiles(s) for s in suppls]
     frags=list(conns.values())
     #两个文件组合
     genSmis=[]
@@ -113,20 +109,65 @@ def connectFrag(filepath,files):
             tempFrags.extend(midSmis)
         genSmis.extend([delete_attachment_H(tfs) for tfs in tempFrags])
     new_gemSmis=set(genSmis)
-    mol_path=os.path.join(tmpdir,'connectFrag_Molecules.sdf')
-    writer=Chem.SDWriter(mol_path)
-    index,j=1,0
-    genMols=[]
+    unique_name=str(uuid.uuid4())
+    sdfPath=os.getcwd()+f'/output/molOptimize/{unique_name}.sdf'
+    writer=Chem.SDWriter(sdfPath)
     for gs in new_gemSmis:
         gm=Chem.MolFromSmiles(gs)
         if gm is not None:
-            gm.SetProp('_Name',str(index))
             writer.write(gm)
-            index+=1
-            if j<10 and 0.4<=QED.qed(gm)<=0.8:
-                genMols.append(gm)
-                j+=1
     writer.close()
-    image=Draw.MolsToGridImage(genMols, molsPerRow=5, subImgSize=(500, 500))
-    return mol_path,image
+    df=PandasTools.LoadSDF(sdfPath)
+    image=Draw.MolsToGridImage(df.sample(10)['ROMol'], molsPerRow=5, subImgSize=(500, 500))
+    return sdfPath,image
 
+def linkGenImages(smiPath):
+    options = rdMolDraw2D.MolDrawOptions()
+    options.legendFontSize = 30  # 设置 legend 字体大小
+    smiFile=open(smiPath,'r')
+    smis=[]
+    warheads=''
+    for line in smiFile:
+        if line.startswith('Warheads:'):
+            warheads=line.strip('\n')[11:-2].split('|')
+        if not line.startswith('Molecules:') and not line.startswith('Warheads:'):
+            smi=line.strip('\n')
+            if len(smis)<100:
+                smis.append(smi)
+    data=pd.DataFrame(smis,columns=['Smiles'])
+    data['SelectNotMol']=data['Smiles'].map(selectNotNoneMol)
+    data1=data[data['SelectNotMol']=='True'].sample(10)
+    mols=[Chem.MolFromSmiles(s) for s in data1['Smiles'].tolist()]
+    img=highlightNewMolsReplace(mols,warheads)
+    return img
+
+def Linkinvent(warheads):
+    input_uuid=str(uuid.uuid4())
+    output_uuid=str(uuid.uuid4())
+
+    #生成warheads的smi文件
+    input_smiPath=os.getcwd()+f'/output/molOptimize/{input_uuid}.smi'
+    input_smifile=open(input_smiPath, 'w')
+    input_smifile.write(f"1\t1_1|1_2\t{warheads}\n")
+    input_smifile.close()
+
+    python_path="/data/Software/anaconda3/envs/reinvent.v3.2/bin/python"
+    script_dir="/data/ywang/Reinvent"
+    command = (
+        f"cd {script_dir} && "
+        "conda run -n reinvent.v3.2 --no-capture-output &&"
+        f"{python_path} genMols_input_local.py --base_config configs/config.json --run_config configs/LinkInvent_genmols_config.json --warheads_file {input_smiPath} --save_folder {os.getcwd()+f'/output/molOptimize'}--output_uuid {output_uuid}"
+    )
+    process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,text=True)
+    for line in iter(process.stdout.readline, ''):
+        if 'report' in line:
+            progress = progress + 10
+            # socketio.emit("progress_update", {"progress": progress})  # 通过 WebSocket 发送更新
+            print(progress)
+        print(line, end='')
+    process.stdout.close()
+    process.wait()
+    # input_smiPath=os.getcwd()+f'/output/molOptimize/{output_uuid}.smi'
+    input_smiPath=os.getcwd()+f'/output/molOptimize/1020e835-78aa-4717-be4c-9649eefb43bd.smi'
+    image=linkGenImages(input_smiPath)
+    return input_smiPath,image

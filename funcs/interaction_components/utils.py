@@ -1,7 +1,7 @@
 from rdkit import Chem
 from rdkit.Chem import AllChem
 import itertools
-from interaction_components import config
+from funcs.interaction_components import config
 import numpy as np
 from collections import namedtuple
 from scipy.spatial.distance import euclidean

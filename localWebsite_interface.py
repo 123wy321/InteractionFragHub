@@ -11,7 +11,7 @@ from funcs.SplitPDBComplex import splitPDB
 from funcs.genInteractionFrags import genECFrags,genHbondFrags,genHydrophobicFrags
 from funcs.reusedCode.highlightMolReplace import highlightOneMolReplace
 from funcs.searchFrags import findFrags
-from funcs.MolOptimizeMethods import replaceFrag,connectFrag
+from funcs.MolOptimizeMethods import Linkinvent, replaceFrag,connectFrag
 
 res_types=['GLY','ALA','SER','THR','CYS','VAL','LEU','ILE','MET','PRO','PHE','TYR','TRP','ASP','GLU','ASN','GLN','HIS','LYS','ARG']
 interaction_types=['ECFrags','HydrophobicFrags','HbondFrags']
@@ -54,34 +54,36 @@ if __name__ == '__main__':
             with gr.Tab(label="Generate EC Fragments", elem_classes="body3_mini_1"):
                 with gr.Row():
                     with gr.Column(scale=1):
-                        workpath1=gr.Textbox(label='Please enter the directories of the following files')
-                        lig1=gr.Textbox(label='Please enter ligand molecule (.mol)')
-                        lig_atomTmesh=gr.Textbox(label='Please enter the atomic electrostatic potential file of the ligand molecule (.atomtmesh)')
-                        pro_atomTmesh=gr.Textbox(label='Please enter the atomic electrostatic potential file of the protein molecule (.atomtmesh)')
-                        genFrags1=gr.Button(value='Generate EC Fragments',elem_id="btn3")
+                        lig1=gr.components.File(label='Ligand File(.mol)')
                     with gr.Column(scale=1):
-                        frags1=gr.Files()
-                    genFrags1.click(fn=genECFrags,inputs=[workpath1,lig1,pro_atomTmesh,lig_atomTmesh],outputs=frags1)
+                        pro1=gr.components.File(label='Protein File(.pdb)')
+                with gr.Row():
+                    genFrags1=gr.Button(value='Generate EC Fragments',elem_id="btn3")
+                with gr.Row():
+                    frags1=gr.Files(label='Generated ECFrags Files(.csv)')   
+                genFrags1.click(fn=genECFrags,inputs=[lig1,pro1],outputs=frags1)     
             with gr.Tab(label="Generate Hbond Fragments", elem_classes="body3_mini_2"):
                 with gr.Row():
                     with gr.Column(scale=1):
-                        workpath2=gr.Textbox(label='Please enter the directories of the following files')
-                        lig2=gr.Textbox(label='Please enter the ligand molecule(.mol)')
-                        pro2=gr.Textbox(label='Please enter the protein molecule(.pdb)')
-                        genFrags2=gr.Button(value='Generate Hbond Fragments',elem_id="btn4")
+                        lig2=gr.components.File(label='Ligand File(.mol)')
                     with gr.Column(scale=1):
-                        frags2=gr.Files()
-                    genFrags2.click(fn=genHbondFrags, inputs=[workpath2,lig2,pro2], outputs=frags2)
+                        pro2=gr.components.File(label='Protein File(.pdb)')
+                with gr.Row():
+                    genFrags2=gr.Button(value='Generate Hbond Fragments',elem_id="btn4")
+                with gr.Row():
+                    frags2=gr.Files(label='Generated HbondFrags Files(.csv)')
+                genFrags2.click(fn=genHbondFrags, inputs=[lig2,pro2], outputs=frags2)
             with gr.Tab(label="Generate Hydrophobic Fragments", elem_classes="body3_mini_3"):
                 with gr.Row():
                     with gr.Column(scale=1):
-                        workpath3=gr.Textbox(label='Please enter the directories of the following files')
-                        lig3=gr.Textbox(label='Please enter the ligand molecule(.mol)')
-                        pro3=gr.Textbox(label='Please enter the protein molecule(.pdb)')
-                        genFrags3=gr.Button(value='Generate Hydrophobic Fragments',elem_id="btn5")
-                    with gr.Column(scale=1):
-                        frags3=gr.Files()
-                    genFrags3.click(fn=genHydrophobicFrags, inputs=[workpath3,lig3,pro3], outputs=frags3)
+                        lig3=gr.components.File(label='Ligand File(.mol)')
+                    with gr.Column(scale=1):    
+                        pro3=gr.components.File(label='Protein File(.pdb)')
+                with gr.Row():
+                    genFrags3=gr.Button(value='Generate Hydrophobic Fragments',elem_id="btn5")
+                with gr.Row():
+                    frags3=gr.Files(label='Generated HydrohobicFrags Files(.csv)')
+                genFrags3.click(fn=genHydrophobicFrags, inputs=[lig3,pro3], outputs=frags3)
         #查找片段
         with gr.Tab(label="Search Fragments", elem_id="body4"):
             gr.Markdown('Please select residue and interaction types,then click Search button to get the needed fragment file.')
@@ -127,22 +129,22 @@ if __name__ == '__main__':
             with gr.Tab(label="Link Fragments", elem_classes="body5_mini_2"):
                 with gr.Row():
                     with gr.Column(scale=1):
-                        input_path = gr.Textbox(label='Please input the folder path of fragments which need to link')
-                        input_file = gr.Textbox(label='Please enter the fragment file names you want to link')
-                        connect = gr.Button(value='Link Fragments',elem_id="btn9")
+                        input_file1=gr.File(label='Upload 2 or 3 fragments sdf file',file_count='multiple')
                     with gr.Column(scale=1):
                         output_file1 = gr.components.File(label='Link molecules sdf file')
                 with gr.Row():
+                    connect = gr.Button(value='Link Fragments',elem_id="btn9")
+                with gr.Row():
                     example4 = gr.Image(label='Display linked molecules')
-                connect.click(fn=connectFrag, inputs=[input_path, input_file], outputs=[output_file1, example4])
-            # with gr.Tab(label="LinkInvent", elem_classes="body5_mini_3"):
-            #     with gr.Row():
-            #         with gr.Column(scale=1):
-            #             warheads_file = gr.Textbox(label='Warheads File')
-            #             linkinvent = gr.Button(value='Linker Design',elem_id="btn10")
-            #         with gr.Column(scale=1):
-            #             output_file2 = gr.components.File(label='Generate molecules sdf file')
-            #     with gr.Row():
-            #         example5=gr.Image(label='Display generated molecules')
-            #     linkinvent.click(fn=genMols_linkinvent,inputs=[warheads_file],outputs=[output_file2, example5])
+                connect.click(fn=connectFrag, inputs=[input_file1], outputs=[output_file1, example4])
+            with gr.Tab(label="LinkInvent", elem_classes="body5_mini_3"):
+                with gr.Row():
+                    with gr.Column(scale=1):
+                        warheads = gr.Textbox(label='Warheads File',placeholder='For example: *N[C@H](C)c1cc(N)cc(C(F)(F)F)c1|*C1CCOC1')
+                        linkinvent = gr.Button(value='Linker Design',elem_id="btn10")
+                    with gr.Column(scale=1):
+                        output_file2 = gr.components.File(label='Generate molecules sdf file')
+                with gr.Row():
+                    example5=gr.Image(label='Display generated molecules')
+                linkinvent.click(fn=Linkinvent,inputs=[warheads],outputs=[output_file2, example5])
         demo.launch(share=True)

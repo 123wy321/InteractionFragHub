@@ -4,10 +4,18 @@
 @Author  : WY
 @File    : utils.py
 '''
+import re
 import numpy as np
 import pandas as pd
 from rdkit import Chem
 
+pattern = r'[A-Z]'
+def updateResName(data,colIndex):
+    new_data = data.copy(deep=True)
+    for index, row in data.iterrows():
+        new_rn = re.sub(pattern, '', str(row['residueNumber']))
+        new_data.iloc[index, colIndex] = new_rn
+    return new_data
 
 def mol_with_atomLabel(mol):
     atom_dict = {}
@@ -106,3 +114,10 @@ def Mol_Conn(s1,s2,attachment): #需连接的片段的smiles,取代位点的表�
                     conn.append(Chem.MolToSmiles(mw)) #一个位点取代结束，进行存储
                     mw = Chem.RWMol(m) #刷新mw,保证下一个位点取代序号正确
     return conn
+
+def selectNotNoneMol(smile):
+    mol=Chem.MolFromSmiles(smile)
+    if mol is not None:
+        return 'True'
+    else:
+        return 'False'

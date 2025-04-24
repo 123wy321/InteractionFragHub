@@ -7,16 +7,15 @@ from rdkit.Chem import Descriptors
 
 from collections import namedtuple
 from operator import itemgetter
-from interaction_components.utils import *
-
-from interaction_components.utils import centroid, tilde_expansion, tmpfile, classify_by_name, get_atom_coords
-from interaction_components.utils import cluster_doubles, is_lig, normalize_vector, vector, ring_is_planar
-from interaction_components.utils import extract_pdbid, read_pdb, create_folder_if_not_exists, canonicalize
-from interaction_components.utils import read, nucleotide_linkage, sort_members_by_importance, is_acceptor, is_donor
-from interaction_components.utils import whichchain, whichatomname, whichrestype, whichresnumber, euclidean3d, int32_to_negative
-from interaction_components.detection import halogen, pication, water_bridges, metal_complexation
-from interaction_components.detection import hydrophobic_interactions, pistacking, hbonds, saltbridge
-from interaction_components import config
+from funcs.interaction_components.utils import *
+from funcs.interaction_components.utils import centroid, tilde_expansion, tmpfile, classify_by_name, get_atom_coords
+from funcs.interaction_components.utils import cluster_doubles, is_lig, normalize_vector, vector, ring_is_planar
+from funcs.interaction_components.utils import extract_pdbid, read_pdb, create_folder_if_not_exists, canonicalize
+from funcs.interaction_components.utils import read, nucleotide_linkage, sort_members_by_importance, is_acceptor, is_donor
+from funcs.interaction_components.utils import whichchain, whichatomname, whichrestype, whichresnumber, euclidean3d, int32_to_negative
+from funcs.interaction_components.detection import halogen, pication, water_bridges, metal_complexation
+from funcs.interaction_components.detection import hydrophobic_interactions, pistacking, hbonds, saltbridge
+from funcs.interaction_components import config
 
 
 def get_features(mol):
