@@ -17,7 +17,6 @@
 
 #body1-button,#body2-button,#body3-button,#body4-button,#body5-button{
     font-size:23px;
-    /*font-family: "Times New Roman";*/
     font-weight: bold;
 }
 
@@ -27,30 +26,36 @@
 
 #component-3,#component-14,#component-29,#component-62,#component-78,#component-81{
     font-size:24px;
-    /*font-family: "Times New Roman";*/
 }
 
-span.svelte-1gfkn6j {
-    font-size:22px;
-    /*font-family: "Times New Roman";*/
-}
-
-label.svelte-1b6s6s.float,label.svelte-1b6s6s,td.svelte-1lop6bc{
-    font-size: 22px;
-}
-
-div.svelte-r3x3aw,p.svelte-1bvc1p0{
-    font-size: 22px;
-}
 #component-30-button,#component-40-button,#component-50-button,#component-79-button,#component-82-button,#component-98-button,#component-101-button,#component-111-button{
     font-size: 22px;
 }
-div#component-79 {
-    font-size: 22px;
-    /*text-align: center;*/
+span.svelte-1gfkn6j,label.svelte-1b6s6s {
+    font-size:22px;
 }
+
+span.md.svelte-8tpqd2.prose{
+    font-size:22px;
+}
+
 textarea.scroll-hide.svelte-1f354aw {
     font-size: 20px;
+}
+
+tr.file.svelte-18wv37q{
+    font-size: 20px;
+}
+
+input.border-none.svelte-1sk0pyu{
+    font-size:20px;
+}
+/* div.svelte-r3x3aw,p.svelte-1bvc1p0{
+    font-size: 22px;
+} */
+
+/* div#component-79 {
+    font-size: 22px;
 }
 
 

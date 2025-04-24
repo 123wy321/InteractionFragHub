@@ -21,7 +21,7 @@ if __name__ == '__main__':
         gr.Image(value='./static/picture/logo.png',width=300,show_download_button=False,container=False)
         #分子打碎
         with gr.Tab(label="Break Molecule", elem_id="body1"):
-            gr.Markdown('Use RotaryFrag to break Molecules.')
+            gr.Markdown('Use RotaryFrag to break Molecules.',elem_id='markdown1')
             with gr.Row():
                 with gr.Column(scale=1):
                     inputs = gr.components.File(label='Molecule File(.sdf,.mol)',elem_id='component1')
@@ -34,12 +34,12 @@ if __name__ == '__main__':
             breakdown.click(fn=breakMols, inputs=inputs, outputs=[outputs, example1])
         #分离蛋白复合物
         with gr.Tab(label="Split PDB Complex", elem_id="body2"):
-            gr.Markdown('Please enter PDB File, then click Split button to generate PDB file of protein and MOL file of ligand.')
+            gr.Markdown('Please enter PDB File, then click Split button to generate PDB file of protein and MOL file of ligand.',elem_classes='markdown')
             with gr.Row():
                 with gr.Column(scale=1):
                     inputs = gr.components.File(label='Upload PDB file of protein complex')
                 with gr.Column(scale=1):
-                    ligand_name = gr.Textbox(label='Enter ligand names')
+                    ligand_name = gr.Textbox(label='Enter ligand names',placeholder='For example: L7H')
             with gr.Row():
                 breakdown = gr.Button(value='Split PDB Complex',elem_id="btn2")
             with gr.Row():
@@ -104,7 +104,7 @@ if __name__ == '__main__':
                     mol_df = gr.DataFrame()
             search.click(fn=findFrags, inputs=[res, interaction], outputs=[outputs, example2,mol_df])
         #基于片段的分子优化
-        with gr.Tab(label="Generate molecules based on Fragments", elem_id="body5"):
+        with gr.Tab(label="Optimize molecules based on Fragments", elem_id="body5"):
             gr.Markdown('Select different methods to generate molecules.')
             with gr.Tab(label="Replace Fragments", elem_classes="body5_mini_1"):
                 with gr.Row():
