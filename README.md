@@ -30,7 +30,9 @@ versions of the third-party packages:
 
 Since InterFragHub involves multiple parts, it is necessary to creat and configure the other two independent virtual environment.
 * ESP-DNN:
-See https://github.com/AstexUK/ESP_DNN for more information
+In "Generate EC Fragments":
+    Use https://github.com/AstexUK/ESP_DNN for generate pqr files for ligand and protein.
+    Use https://github.com/AstexUK/esp-surface-generator for generate tmesh files for ligand and protein.
 * Link-INVENT:
 See https://github.com/MolecularAI/Reinvent for more information
 

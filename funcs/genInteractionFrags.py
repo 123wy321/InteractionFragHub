@@ -271,8 +271,8 @@ def calWeight(tmesh,pqr_data):
     data=mid_pqr_data[mid_pqr_data['weight'] == mid_pqr_data['weight'].max()]
     return data
     
-def genECFrags(lig,pro):
-    ligpath,propath=lig.name,pro.name
+def genECFrags(lig,propath):
+    ligpath,propath=lig.name,propath.name
     tab=ligpath.split('\\')[-1].split('_lig')[0]
     file_lig,file_pro=ligpath.split('\\')[-1],propath.split('\\')[-1]
 
