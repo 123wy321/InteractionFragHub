@@ -1,5 +1,6 @@
 # InteractionFragHub: Fragment Libraries from Protein-Ligand Interactions: Uncovering New Opportunities for Targeted Drug Design
 
+![logo](static/picture/logo.png)
 <br>This repository contains the code for setting up and implementing the InterFragHub local platform, a web-based tool for visualizing and interacting with fragment-based molecular design.The platform provides an interactive interface to facilitate the assembly, optimization, and analysis of molecular fragments.
 
 Key features of the InterFragHub platform include:
