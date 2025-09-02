@@ -35,6 +35,7 @@ In "Generate EC Fragments":
     Use https://github.com/AstexUK/esp-surface-generator for generate tmesh files for ligand and protein.
 * Link-INVENT:
     See https://github.com/MolecularAI/Reinvent for more information
+## Install conda environment and run it
 * ECscore(conda environment):
     cd InteractionFragHub
     conda env create -f environment.yml
