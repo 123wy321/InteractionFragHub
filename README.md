@@ -34,5 +34,9 @@ In "Generate EC Fragments":
     Use https://github.com/AstexUK/ESP_DNN for generate pqr files for ligand and protein.
     Use https://github.com/AstexUK/esp-surface-generator for generate tmesh files for ligand and protein.
 * Link-INVENT:
-See https://github.com/MolecularAI/Reinvent for more information
-
+    See https://github.com/MolecularAI/Reinvent for more information
+* ECscore(conda environment):
+    cd InteractionFragHub
+    conda env create -f environment.yml
+    conda activate ECscore
+    python localWebsite_interface.py
